@@ -38,6 +38,7 @@ Out of scope:
 | Metadata-only connector core | Validate configured sample references and local boundaries without downloading files. | Chosen for P0 because it is deterministic, reversible, and matches the demo constraint that live external APIs are not required. |
 | Live GitHub contents probe | Call GitHub during every connection test. | Deferred because network, rate limit, TLS, and repository changes would make the demo nondeterministic. The design records these edge cases and keeps a future probe boundary possible. |
 | Full HTTP backend framework now | Add a web framework and implement all source endpoints. | Deferred because no runtime dependency has been approved and the current task only needs the backend connection core. |
+| Framework-neutral HTTP boundary | Implement route behavior with the Python standard library and no server framework. | Chosen for this vertical slice because it proves backend-owned HTTP semantics without approving a production runtime. |
 
 ## State Machine
 
@@ -134,6 +135,22 @@ Rollback path:
 | Idempotent retry | Same connection test is requested repeatedly | Return a fresh timestamp and trace ID without changing source state. |
 | Clock or trace missing | Backend cannot create observability metadata | Return deterministic testable defaults in tests; production adapter must inject clock/trace. |
 | Live dependency unavailable | GitHub or filesystem cannot be checked | Return diagnostic status; do not block unrelated UI rendering. |
+| Mock probe outcome | Test source config includes `probeOutcome` | Simulate timeout, TLS failure, rate limit, remote not found, or redirect without live network access. |
+| Malformed JSON | POST body is invalid JSON or not a JSON object | Return `application/problem+json`; do not enter connector logic. |
+| Unsupported media type | POST body is not `application/json` | Return 415 problem details. |
+| Wrong route or method | Route is unknown or method is not supported | Return 404 or 405 problem details. |
+
+## Backend Boundary
+
+The implemented backend boundary has three layers:
+
+| Layer | Responsibility |
+| --- | --- |
+| Source store | Holds source records and validates source creation fields. |
+| Source connection service | Evaluates source-specific reachability, capabilities, diagnostics, and metadata fingerprints. |
+| Source API and HTTP boundary | Converts service behavior into envelope responses, headers, and problem details for `GET /api/health`, `GET /api/sources`, `POST /api/sources`, and `POST /api/sources/{sourceId}/connect-test`. |
+
+This boundary intentionally avoids a production HTTP framework so that the route semantics can be tested without adding runtime dependencies.
 
 ## Response Extension
 
@@ -154,6 +171,10 @@ Optional fields added for diagnostics:
 
 These fields are optional and additive, so contract version `0.1.0` remains compatible.
 
+## Mock Scenario Fixture
+
+`contracts/mocks/sourceConnectionScenarios.json` is the frontend and QA scenario pack for direct source states. `contracts/mocks/sourceConnectionProbeScenarios.json` covers deterministic external probe simulations. Together they include connected, degraded, unsafe reference, simulated external probe failure, unsupported source type, and problem-response examples. Backend tests verify that the fixture expectations match the current implementation.
+
 ## Primitive Acceptance Criteria
 
 | ID | Criterion |
@@ -166,11 +187,15 @@ These fields are optional and additive, so contract version `0.1.0` remains comp
 | SRC-CONN-006 | Unsupported source types return a neutral unreachable result, not a crash. |
 | SRC-CONN-007 | Connection test responses preserve the existing envelope shape and required fields from `contracts/openapi.yaml`. |
 | SRC-CONN-008 | Behavior tests cover success, degraded metadata, invalid config, unsafe reference, local boundary denial, missing source, and unsupported source cases. |
+| SRC-CONN-009 | HTTP boundary tests cover health, source list, source creation, connection test, malformed JSON, unsupported media type, wrong method, and unknown route cases. |
+| SRC-CONN-010 | Scenario fixture tests prove frontend mock cases match backend behavior. |
 
 ## Impact Surface
 
 - Backend source connection core.
 - `contracts/schemas/source-scan.yaml` optional diagnostics fields.
 - `contracts/mocks/sources.json` source metadata.
+- `contracts/mocks/sourceConnectionScenarios.json` scenario metadata.
+- `contracts/mocks/sourceConnectionProbeScenarios.json` external probe scenario metadata.
+- `docs/SOURCE_CONNECTION_FRONTEND_CONTRACT.md` frontend source connector contract.
 - `docs/API_CONTRACT.md`, `docs/PRD.md`, `docs/TRD.md`, `docs/DesignSpec.md`, `docs/TestCase.md`, and `ACCEPTANCE.md`.
-

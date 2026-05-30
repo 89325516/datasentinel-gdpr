@@ -10,6 +10,7 @@ Source of truth:
 - Mock payloads: `contracts/mocks/`.
 - Design rationale: `docs/design/frontend-backend-delivery-contract.md`.
 - Adaptive governance rationale: `docs/design/adaptive-governance-review-control.md`.
+- Source connector frontend contract: `docs/SOURCE_CONNECTION_FRONTEND_CONTRACT.md`.
 
 ## Standard Basis
 
@@ -168,6 +169,7 @@ Failure paths:
 - `registered -> validating -> not_found`
 - `registered -> validating -> unsupported_type`
 - `registered -> validating -> network_error`
+- `registered -> validating -> rate_limited`
 
 Unknown source IDs use `application/problem+json` with 404 semantics.
 
@@ -222,12 +224,21 @@ The contract represents the source as `sourceType = organizer_sample_repo` and e
 
 `POST /api/sources/{sourceId}/connect-test` keeps `sourceId`, `reachable`, and `message` as the required result shape. It may also return optional diagnostics:
 
-- `connectionStatus`: open string such as `connected`, `degraded`, `invalid_config`, `unsafe_reference`, `policy_denied`, `not_found`, `unsupported_type`, or `network_error`.
+- `connectionStatus`: open string such as `connected`, `degraded`, `invalid_config`, `unsafe_reference`, `policy_denied`, `not_found`, `unsupported_type`, `network_error`, or `rate_limited`.
 - `checkedAt`: ISO 8601 UTC timestamp for this connection test.
 - `capabilities`: `canReadMetadata`, `canReadContent`, `supportsDeltaScan`, and `requiresCredentials`.
 - `diagnostics`: ordered objects with `code`, `severity`, `message`, and `retryable`.
 - `sourceVersion`: source metadata version such as a commit SHA when known.
 - `contentFingerprint`: metadata-only fingerprint. It must not expose raw sample file content.
+
+Backend-owned source connection routes currently implemented for this vertical slice:
+
+- `GET /api/health`
+- `GET /api/sources`
+- `POST /api/sources`
+- `POST /api/sources/{sourceId}/connect-test`
+
+The backend route boundary is framework-neutral and returns the same envelope, headers, and problem content types that a future HTTP framework adapter must preserve.
 
 ## Mock Payloads
 
@@ -244,6 +255,8 @@ Frontend agents should begin with:
 - `contracts/mocks/reviewSupport.json`
 - `contracts/mocks/scanStatus.json`
 - `contracts/mocks/sources.json`
+- `contracts/mocks/sourceConnectionScenarios.json`
+- `contracts/mocks/sourceConnectionProbeScenarios.json`
 
 Mocks are contract fixtures. They are not production seed data.
 

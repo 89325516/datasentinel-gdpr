@@ -2,7 +2,7 @@
 
 ## Current Technical Scope
 
-This repository is initialized for documentation, collaboration, and contract-first parallel delivery. The approved technical baseline is the tolerant REST contract in `contracts/openapi.yaml`, its split schemas in `contracts/schemas/`, mock fixtures in `contracts/mocks/`, and a small Python backend core for metadata-only sample source connection validation.
+This repository is initialized for documentation, collaboration, and contract-first parallel delivery. The approved technical baseline is the tolerant REST contract in `contracts/openapi.yaml`, its split schemas in `contracts/schemas/`, mock fixtures in `contracts/mocks/`, and a Python backend source connection vertical slice for metadata-only sample source validation.
 
 No frontend runtime, HTTP backend framework, database, queue, external production API integration, authentication, authorization, or deployment path is approved yet.
 
@@ -49,10 +49,19 @@ These are not approved implementation modules yet. They are candidate boundaries
 
 - The backend source connection core is side-effect-free and uses only the Python standard library.
 - A framework-neutral source API adapter returns contract envelopes, response headers, and RFC 9457 problem payloads for source list, create, and connection-test operations.
+- A framework-neutral HTTP route boundary handles `GET /api/health`, `GET /api/sources`, `POST /api/sources`, and `POST /api/sources/{sourceId}/connect-test`.
+- A standard-library mock HTTP server can expose the source connection routes locally for frontend contract testing.
 - The default organizer sample source is metadata-only and references the public repository without vendoring PDFs.
 - Local sources are only reachable when their resolved paths stay within explicitly configured allowed roots.
 - Mock sources must state that they are mock-only and must not imply production tenant access.
 - Connection results return required contract fields plus optional diagnostics, capabilities, source version, and metadata fingerprint.
+- Realistic source connection scenario mocks live in `contracts/mocks/sourceConnectionScenarios.json` and `contracts/mocks/sourceConnectionProbeScenarios.json`, and are validated against backend behavior.
+
+Local source connection mock server:
+
+```bash
+python3 -m backend.datasentinel.source_server --host 127.0.0.1 --port 8000
+```
 
 ## External Research Required Before Implementation
 

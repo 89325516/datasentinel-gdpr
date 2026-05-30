@@ -1,0 +1,310 @@
+{
+  "data": [
+    {
+      "scenarioId": "connected-organizer-sample",
+      "description": "Approved organizer sample repository is registered with all expected sample families.",
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_001/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": true,
+        "connectionStatus": "connected",
+        "diagnosticCodes": [],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "connected-mock-sharepoint-boundary",
+      "description": "Mock SharePoint source is reachable but explicitly marked as mock-only.",
+      "source": {
+        "sourceId": "source_002",
+        "name": "Mock SharePoint Finance",
+        "sourceType": "sharepoint_mock",
+        "status": "mocked",
+        "rootLabel": "SharePoint Finance",
+        "masterOfDataUserId": "user_anna"
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_002/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": true,
+        "connectionStatus": "connected",
+        "diagnosticCodes": [
+          "source.mock_only"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "connected-default-reference",
+      "description": "Organizer source without an explicit URL uses the approved default reference.",
+      "source": {
+        "sourceId": "source_default_reference",
+        "name": "Default Reference",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "sampleFamilies": [
+          "Expense_Report",
+          "IT_Access_Request",
+          "Incident_Report",
+          "Supplier_Onboarding",
+          "Training_Evaluation"
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_default_reference/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": true,
+        "connectionStatus": "connected",
+        "diagnosticCodes": [
+          "source.default_reference_used"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "degraded-missing-sample-family",
+      "description": "Organizer source is reachable but missing expected sample family metadata.",
+      "source": {
+        "sourceId": "source_missing_family",
+        "name": "Organizer Missing Family",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://github.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report"
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_missing_family/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": true,
+        "connectionStatus": "degraded",
+        "diagnosticCodes": [
+          "source.sample_family_missing"
+        ],
+        "partial": true
+      }
+    },
+    {
+      "scenarioId": "degraded-unknown-duplicate-family",
+      "description": "Organizer source includes unknown and duplicate sample family values.",
+      "source": {
+        "sourceId": "source_family_drift",
+        "name": "Organizer Family Drift",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://github.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report",
+          "Expense_Report",
+          "Legacy_Form"
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_family_drift/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": true,
+        "connectionStatus": "degraded",
+        "diagnosticCodes": [
+          "source.sample_family_missing",
+          "source.sample_family_unknown",
+          "source.sample_family_duplicate"
+        ],
+        "partial": true
+      }
+    },
+    {
+      "scenarioId": "unsafe-non-https-reference",
+      "description": "Organizer sample reference uses a non-HTTPS scheme.",
+      "source": {
+        "sourceId": "source_http_reference",
+        "name": "HTTP Reference",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "http://github.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report"
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_http_reference/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "unsafe_reference",
+        "diagnosticCodes": [
+          "source.reference_scheme"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "unsafe-reference-credentials",
+      "description": "Organizer sample reference contains a credential-like username segment.",
+      "source": {
+        "sourceId": "source_credential_reference",
+        "name": "Credential Reference",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://token@example.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report"
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_credential_reference/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "unsafe_reference",
+        "diagnosticCodes": [
+          "source.reference_credentials"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "unsafe-wrong-host",
+      "description": "Organizer sample reference points at a non-GitHub host.",
+      "source": {
+        "sourceId": "source_wrong_host",
+        "name": "Wrong Host",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://example.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report"
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_wrong_host/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "unsafe_reference",
+        "diagnosticCodes": [
+          "source.reference_host"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "unsafe-wrong-repository",
+      "description": "Organizer sample reference points at an unapproved repository path.",
+      "source": {
+        "sourceId": "source_wrong_repo",
+        "name": "Wrong Repository",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://github.com/a-klumpp/other-samples",
+        "sampleFamilies": [
+          "Expense_Report"
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_wrong_repo/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "unsafe_reference",
+        "diagnosticCodes": [
+          "source.reference_repo"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "unsafe-hidden-selector",
+      "description": "Organizer sample reference contains query or fragment selectors.",
+      "source": {
+        "sourceId": "source_hidden_selector",
+        "name": "Hidden Selector",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://github.com/a-klumpp/GDPR-data-samples?ref=main",
+        "sampleFamilies": [
+          "Expense_Report"
+        ]
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_hidden_selector/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "unsafe_reference",
+        "diagnosticCodes": [
+          "source.reference_selector"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "unsupported-future-source",
+      "description": "Unknown future connector type must not crash backend or frontend.",
+      "source": {
+        "sourceId": "source_future",
+        "name": "Future Connector",
+        "sourceType": "future_enterprise_drive",
+        "status": "registered"
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_future/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "unsupported_type",
+        "diagnosticCodes": [
+          "source.unsupported_type"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "unknown-source-id",
+      "description": "Unknown source IDs return problem details.",
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_missing/connect-test"
+      },
+      "expected": {
+        "httpStatus": 404,
+        "contentType": "application/problem+json",
+        "problemStatus": 404
+      }
+    }
+  ],
+  "meta": {
+    "contractVersion": "0.1.0",
+    "generatedAt": "2026-05-30T12:00:00Z",
+    "traceId": "trace_demo_source_connection_scenarios",
+    "partial": false,
+    "warnings": []
+  }
+}

@@ -38,6 +38,10 @@
 | SRC-CONN-009 | Test missing local source path | Response returns `connectionStatus = not_found` with retryable diagnostics. |
 | SRC-CONN-010 | Test source creation validation | Blank required fields and duplicate IDs are rejected; unknown config fields are preserved safely. |
 | SRC-CONN-011 | Test framework-neutral source API adapter | Success responses include `X-Trace-Id` and `X-Contract-Version`; source errors return `application/problem+json`. |
+| SRC-CONN-012 | Test framework-neutral source HTTP boundary | Health, source list, source create, and connection-test routes return expected contract envelopes or problem details. |
+| SRC-CONN-013 | Test source connection scenario fixtures | `contracts/mocks/sourceConnectionScenarios.json` and `contracts/mocks/sourceConnectionProbeScenarios.json` scenarios match backend behavior for connected, degraded, unsafe, simulated external probe failure, unsupported, and unknown source cases. |
+| SRC-CONN-014 | Test malformed HTTP-like requests | Unsupported media type, malformed JSON, non-object JSON, unknown route, and wrong method return problem details. |
+| SRC-CONN-015 | Test local source connection mock server | Real HTTP requests can list sources, test a source connection, and receive problem details for malformed JSON. |
 
 ## Future Behavior Test Themes
 

@@ -1,0 +1,215 @@
+{
+  "data": [
+    {
+      "scenarioId": "network-timeout-probe",
+      "description": "Future live metadata probe times out without treating the source as connected.",
+      "source": {
+        "sourceId": "source_network_timeout",
+        "name": "Network Timeout",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://github.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report",
+          "IT_Access_Request",
+          "Incident_Report",
+          "Supplier_Onboarding",
+          "Training_Evaluation"
+        ],
+        "config": {
+          "probeOutcome": "network_timeout"
+        }
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_network_timeout/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "network_error",
+        "diagnosticCodes": [
+          "source.network_timeout"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "tls-failed-probe",
+      "description": "Future live metadata probe fails TLS validation and must not bypass it.",
+      "source": {
+        "sourceId": "source_tls_failed",
+        "name": "TLS Failed",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://github.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report",
+          "IT_Access_Request",
+          "Incident_Report",
+          "Supplier_Onboarding",
+          "Training_Evaluation"
+        ],
+        "config": {
+          "probeOutcome": "tls_failed"
+        }
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_tls_failed/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "network_error",
+        "diagnosticCodes": [
+          "source.tls_failed"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "rate-limited-probe",
+      "description": "Future live metadata probe is rate limited and marked retryable.",
+      "source": {
+        "sourceId": "source_rate_limited",
+        "name": "Rate Limited",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://github.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report",
+          "IT_Access_Request",
+          "Incident_Report",
+          "Supplier_Onboarding",
+          "Training_Evaluation"
+        ],
+        "config": {
+          "probeOutcome": "rate_limited"
+        }
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_rate_limited/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "rate_limited",
+        "diagnosticCodes": [
+          "source.rate_limited"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "remote-not-found-probe",
+      "description": "Future live metadata probe receives remote not found.",
+      "source": {
+        "sourceId": "source_remote_not_found",
+        "name": "Remote Not Found",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://github.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report",
+          "IT_Access_Request",
+          "Incident_Report",
+          "Supplier_Onboarding",
+          "Training_Evaluation"
+        ],
+        "config": {
+          "probeOutcome": "remote_not_found"
+        }
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_remote_not_found/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "not_found",
+        "diagnosticCodes": [
+          "source.remote_not_found"
+        ],
+        "partial": false
+      }
+    },
+    {
+      "scenarioId": "redirect-detected-probe",
+      "description": "Future live metadata probe detects a redirect requiring operator approval.",
+      "source": {
+        "sourceId": "source_redirect",
+        "name": "Redirect Detected",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://github.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report",
+          "IT_Access_Request",
+          "Incident_Report",
+          "Supplier_Onboarding",
+          "Training_Evaluation"
+        ],
+        "config": {
+          "probeOutcome": "redirect_detected"
+        }
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_redirect/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": true,
+        "connectionStatus": "degraded",
+        "diagnosticCodes": [
+          "source.redirect_detected"
+        ],
+        "partial": true
+      }
+    },
+    {
+      "scenarioId": "invalid-mock-probe-outcome",
+      "description": "Unknown deterministic probe outcome is treated as invalid config.",
+      "source": {
+        "sourceId": "source_bad_probe",
+        "name": "Bad Probe Outcome",
+        "sourceType": "organizer_sample_repo",
+        "status": "registered",
+        "referenceUrl": "https://github.com/a-klumpp/GDPR-data-samples",
+        "sampleFamilies": [
+          "Expense_Report",
+          "IT_Access_Request",
+          "Incident_Report",
+          "Supplier_Onboarding",
+          "Training_Evaluation"
+        ],
+        "config": {
+          "probeOutcome": "future_unrecognized_outcome"
+        }
+      },
+      "request": {
+        "method": "POST",
+        "path": "/api/sources/source_bad_probe/connect-test"
+      },
+      "expected": {
+        "httpStatus": 200,
+        "reachable": false,
+        "connectionStatus": "invalid_config",
+        "diagnosticCodes": [
+          "source.probe_outcome_unknown"
+        ],
+        "partial": false
+      }
+    }
+  ],
+  "meta": {
+    "contractVersion": "0.1.0",
+    "generatedAt": "2026-05-30T12:00:00Z",
+    "traceId": "trace_demo_source_connection_probe_scenarios",
+    "partial": false,
+    "warnings": []
+  }
+}

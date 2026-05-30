@@ -100,6 +100,17 @@ class SourceConnectionService:
                 capabilities(),
             )
 
+        probe_result = _mock_probe_result(source)
+        if probe_result:
+            return self._result(
+                source.source_id,
+                probe_result["reachable"],
+                probe_result["status"],
+                probe_result["message"],
+                [probe_result["diagnostic"]],
+                capabilities(metadata=probe_result["metadata"], delta=probe_result["delta"]),
+            )
+
         family_diagnostics = _sample_family_diagnostics(
             source.sample_families,
             self._policy.expected_families,
@@ -315,3 +326,62 @@ def _metadata_fingerprint(reference_url: str, families: list[str]) -> str:
     family_part = ",".join(sorted(families))
     digest = hashlib.sha256(f"{reference_url}\n{family_part}".encode("utf-8")).hexdigest()
     return f"metadata:sha256:{digest}"
+
+
+def _mock_probe_result(source: SourceRecord) -> dict[str, Any] | None:
+    outcome = source.config.get("probeOutcome")
+    if not outcome:
+        return None
+    outcomes = {
+        "network_timeout": {
+            "reachable": False,
+            "status": "network_error",
+            "message": "External metadata probe timed out.",
+            "diagnostic": diagnostic("source.network_timeout", "error", "External metadata probe timed out.", True),
+            "metadata": False,
+            "delta": False,
+        },
+        "tls_failed": {
+            "reachable": False,
+            "status": "network_error",
+            "message": "External metadata probe failed TLS validation.",
+            "diagnostic": diagnostic("source.tls_failed", "error", "External metadata probe failed TLS validation.", True),
+            "metadata": False,
+            "delta": False,
+        },
+        "rate_limited": {
+            "reachable": False,
+            "status": "rate_limited",
+            "message": "External metadata probe was rate limited.",
+            "diagnostic": diagnostic("source.rate_limited", "warning", "External metadata probe was rate limited.", True),
+            "metadata": False,
+            "delta": False,
+        },
+        "remote_not_found": {
+            "reachable": False,
+            "status": "not_found",
+            "message": "External metadata probe could not find the source.",
+            "diagnostic": diagnostic("source.remote_not_found", "error", "External metadata probe could not find the source.", False),
+            "metadata": False,
+            "delta": False,
+        },
+        "redirect_detected": {
+            "reachable": True,
+            "status": "degraded",
+            "message": "External metadata probe detected a redirect that requires approval.",
+            "diagnostic": diagnostic("source.redirect_detected", "warning", "External metadata probe detected a redirect that requires approval.", False),
+            "metadata": True,
+            "delta": True,
+        },
+    }
+    return outcomes.get(
+        str(outcome),
+        {
+            "reachable": False,
+            "status": "invalid_config",
+            "message": "Unknown mock probe outcome.",
+            "diagnostic": diagnostic("source.probe_outcome_unknown", "error", "Unknown mock probe outcome.", False),
+            "metadata": False,
+            "delta": False,
+        },
+    )

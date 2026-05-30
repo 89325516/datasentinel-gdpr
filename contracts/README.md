@@ -7,6 +7,8 @@ This folder contains the frontend-backend delivery contract.
 - `mocks/` contains contract fixtures for frontend work before backend endpoints exist.
 - Governance mocks cover active policy packs, permission boundaries, and reviewer support.
 - `mocks/connectionTest.json` shows the additive diagnostics shape for `POST /sources/{sourceId}/connect-test`.
+- `mocks/sourceConnectionScenarios.json` contains source connection success, degraded, unsafe, unsupported, and problem-response scenarios for frontend and QA work.
+- `mocks/sourceConnectionProbeScenarios.json` contains deterministic external probe simulations such as timeout, TLS failure, rate limit, remote not found, redirect, and invalid probe config.
 
 Contract version: `0.1.0`.
 

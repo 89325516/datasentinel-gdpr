@@ -19,6 +19,16 @@ Find risky personal-data records, explain why they matter, route them to the acc
 - Implement a metadata-only backend source connection core for controlled sample and mock sources.
 - Avoid speculative architecture, dependencies, or product features before they are accepted.
 
+## Source Connection Mock Server
+
+Run the local backend mock for the source connector contract:
+
+```bash
+python3 -m backend.datasentinel.source_server --host 127.0.0.1 --port 8000
+```
+
+This server exposes the source connection routes for frontend contract testing. It is not a production runtime.
+
 ## Non-Goals
 
 - No automatic deletion of user data without human review.
@@ -43,6 +53,7 @@ Find risky personal-data records, explain why they matter, route them to the acc
 - [Governance Configuration](docs/GOVERNANCE_CONFIG.md)
 - [Organizer Sample References](docs/GDPR_SAMPLE_REFERENCES.md)
 - [Sample Source Connection Design](docs/design/sample-source-connection.md)
+- [Source Connection Frontend Contract](docs/SOURCE_CONNECTION_FRONTEND_CONTRACT.md)
 - [Acceptance Criteria](ACCEPTANCE.md)
 
 ## Frontend-Backend Contract

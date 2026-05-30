@@ -75,6 +75,8 @@ Validation:
 ## Frontend Agent Rules
 
 - Start from `contracts/mocks/`.
+- For source connector UI states, start from `contracts/mocks/sourceConnectionScenarios.json`, `contracts/mocks/sourceConnectionProbeScenarios.json`, and `docs/SOURCE_CONNECTION_FRONTEND_CONTRACT.md`.
+- When a live local mock is useful, point the frontend at the standard-library source mock server from `backend.datasentinel.source_server`.
 - Keep UI resilient to missing optional fields.
 - Treat `meta.partial = true` as renderable with a warning.
 - Never display raw sensitive values.
@@ -86,6 +88,8 @@ Validation:
 - Match `contracts/openapi.yaml` first.
 - Keep endpoint responses envelope-wrapped.
 - Use `application/problem+json` for errors.
+- Preserve source connection route behavior from `backend/datasentinel/source_http.py` when replacing the framework-neutral adapter with a real HTTP framework.
+- Preserve real HTTP behavior covered by `tests/test_source_server.py` when replacing the local mock server.
 - Make scan and review actions idempotent when `Idempotency-Key` is present.
 - Keep real deletion out of P0.
 - Return policy-pack version and permission-boundary data when the contract includes it.
@@ -94,5 +98,6 @@ Validation:
 
 - Validate English-only tracked docs and fixtures.
 - Compare OpenAPI fields, docs, and mocks.
+- Run source connector scenario coverage against `contracts/mocks/sourceConnectionScenarios.json` and `contracts/mocks/sourceConnectionProbeScenarios.json`.
 - Check that state transitions match `docs/API_CONTRACT.md`.
 - Confirm that every acceptance change is reflected in `ACCEPTANCE.md`.

@@ -10,6 +10,7 @@ Source:
     rootLabel: { type: [string, "null"] }
     masterOfDataUserId: { type: [string, "null"] }
     referenceUrl: { type: [string, "null"], format: uri }
+    sourceVersion: { type: [string, "null"] }
     sampleFamilies:
       type: array
       items: { type: string }
@@ -18,12 +19,17 @@ CreateSourceRequest:
   required: [name, sourceType]
   additionalProperties: true
   properties:
+    sourceId: { type: string }
     name: { type: string }
     sourceType: { type: string, example: "local_repo" }
     config:
       type: object
       additionalProperties: true
     masterOfDataUserId: { type: [string, "null"] }
+    referenceUrl: { type: [string, "null"], format: uri }
+    sampleFamilies:
+      type: array
+      items: { type: string }
 SourceEnvelope:
   type: object
   required: [data, meta]
@@ -52,7 +58,7 @@ ConnectionTestEnvelope:
         message: { type: string }
         connectionStatus:
           type: string
-          description: Open status string such as connected, degraded, invalid_config, unsafe_reference, policy_denied, not_found, unsupported_type, or network_error.
+          description: Open status string such as connected, degraded, invalid_config, unsafe_reference, policy_denied, not_found, unsupported_type, network_error, or rate_limited.
         checkedAt: { type: string, format: date-time }
         capabilities: { $ref: "#/ConnectionCapabilities" }
         diagnostics:

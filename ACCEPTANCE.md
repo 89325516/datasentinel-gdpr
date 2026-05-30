@@ -59,6 +59,10 @@ The backend source connection vertical slice is accepted when:
 - Unknown source IDs return RFC 9457-compatible problem details.
 - Unsupported source types return a neutral unreachable result instead of crashing.
 - The framework-neutral source API adapter returns contract headers and `application/problem+json` content types for source errors.
+- The framework-neutral source HTTP boundary handles health, source list, source creation, and connection-test routes with contract-compatible headers and content types.
+- A standard-library mock HTTP server exposes the source connection routes for frontend contract testing.
+- Realistic source connection scenario mocks cover connected, degraded, unsafe, simulated external probe failure, unsupported, and problem-response cases and are verified against backend behavior.
+- Frontend developers have a source connection contract document that defines required UI states, fields, mock fixtures, and scan-start gating rules.
 - Behavior tests cover success, degraded metadata, invalid config, unsafe reference, local boundary denial, missing source, and unsupported source cases.
 
 ## Adaptive Governance Acceptance
