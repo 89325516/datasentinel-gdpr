@@ -151,6 +151,26 @@ Retry path:
 
 - `failed -> queued`
 
+### Source Connection Status
+
+Connection testing is side-effect-free. It validates metadata and boundaries before scans start.
+
+Primary paths:
+
+- `registered -> validating -> connected`
+- `registered -> validating -> degraded`
+
+Failure paths:
+
+- `registered -> validating -> invalid_config`
+- `registered -> validating -> unsafe_reference`
+- `registered -> validating -> policy_denied`
+- `registered -> validating -> not_found`
+- `registered -> validating -> unsupported_type`
+- `registered -> validating -> network_error`
+
+Unknown source IDs use `application/problem+json` with 404 semantics.
+
 ### Finding Status
 
 `open -> assigned -> under_review -> reviewed -> closed`
@@ -200,12 +220,22 @@ https://github.com/a-klumpp/GDPR-data-samples
 
 The contract represents the source as `sourceType = organizer_sample_repo` and exposes sample families as metadata. The repository content is referenced, not vendored.
 
+`POST /api/sources/{sourceId}/connect-test` keeps `sourceId`, `reachable`, and `message` as the required result shape. It may also return optional diagnostics:
+
+- `connectionStatus`: open string such as `connected`, `degraded`, `invalid_config`, `unsafe_reference`, `policy_denied`, `not_found`, `unsupported_type`, or `network_error`.
+- `checkedAt`: ISO 8601 UTC timestamp for this connection test.
+- `capabilities`: `canReadMetadata`, `canReadContent`, `supportsDeltaScan`, and `requiresCredentials`.
+- `diagnostics`: ordered objects with `code`, `severity`, `message`, and `retryable`.
+- `sourceVersion`: source metadata version such as a commit SHA when known.
+- `contentFingerprint`: metadata-only fingerprint. It must not expose raw sample file content.
+
 ## Mock Payloads
 
 Frontend agents should begin with:
 
 - `contracts/mocks/adminMetrics.json`
 - `contracts/mocks/auditEvents.json`
+- `contracts/mocks/connectionTest.json`
 - `contracts/mocks/evaluationLatest.json`
 - `contracts/mocks/findingDetail.json`
 - `contracts/mocks/governanceConfig.json`

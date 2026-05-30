@@ -8,6 +8,9 @@ The future product experience should make GDPR data cleanup feel like an account
 
 | State | Event | Guard | Next State | Side Effect |
 | --- | --- | --- | --- | --- |
+| Source registered | Connection test requested | Source exists and metadata is valid | Source connected | Return capability and diagnostic metadata |
+| Source registered | Connection test requested | Source exists but metadata is incomplete | Source degraded | Return warning diagnostics |
+| Source registered | Connection test requested | Source is unknown or unsafe | Source rejected | Return problem details or unreachable diagnostics |
 | Source selected | Full scan requested | Source is readable | Scanning | Record scan start |
 | Scanning | File analyzed | File can be parsed | Finding classified | Store finding evidence |
 | Scanning | File cannot be parsed | Error is recoverable | Needs review | Record extraction issue |
@@ -37,6 +40,7 @@ The future product experience should make GDPR data cleanup feel like an account
 | Surface | Purpose |
 | --- | --- |
 | Source Connector | Select a controlled demo source and start full or delta scans. |
+| Source Connection Diagnostics | Show reachability, degraded state, capability limits, and retryable errors before scan start. |
 | Admin Dashboard | Show official KPIs, scan progress, review backlog, and risk distribution. |
 | Findings Table | Show risk-ranked findings filtered by owner, scan, status, or risk level. |
 | Evidence Card | Show redacted evidence, signals, context, owner, retention status, and audit timeline. |

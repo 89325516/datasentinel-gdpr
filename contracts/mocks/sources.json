@@ -8,6 +8,7 @@
       "rootLabel": "a-klumpp/GDPR-data-samples",
       "masterOfDataUserId": "user_anna",
       "referenceUrl": "https://github.com/a-klumpp/GDPR-data-samples",
+      "sourceVersion": "76b0f66d5594d7fccfdd103c8379f7d9d7356aeb",
       "sampleFamilies": ["Expense_Report", "IT_Access_Request", "Incident_Report", "Supplier_Onboarding", "Training_Evaluation"]
     },
     {

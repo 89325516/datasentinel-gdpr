@@ -24,6 +24,13 @@ P0 should expose allowed and denied actions to the UI. This improves user contro
 
 P0 must not require live Microsoft Graph, production OAuth, tenant secrets, paid AI services, or external deletion APIs.
 
+## Source Connection Safety
+
+- Connection tests must be side-effect-free.
+- Organizer sample references must use the approved HTTPS GitHub repository URL without credentials, query strings, or fragments.
+- Local sample sources must resolve inside explicitly configured allowed roots.
+- Diagnostics must not echo tokens, passwords, raw sample content, or unredacted sensitive values.
+
 ## Review Safety
 
 Any future production deletion path must include:

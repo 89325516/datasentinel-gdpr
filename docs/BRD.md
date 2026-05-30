@@ -15,6 +15,7 @@ Organizations often store personal and GDPR-relevant data across fragmented file
 - Route findings to accountable owners.
 - Preserve an audit trail for deletion, retention, escalation, or exception decisions.
 - Support future full-scan and delta-scan governance loops.
+- Validate controlled sample source connections with explicit diagnostics before scan work begins.
 - Report measurable scanning quality through accuracy, reproducibility, speed, and resource intensity.
 - Adapt to policy changes, organization changes, ownership transfers, and reviewer delegation without code rewrites.
 - Give users clear visibility into their permissions and decision boundaries.

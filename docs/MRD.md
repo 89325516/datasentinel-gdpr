@@ -15,6 +15,7 @@
 - They need a defensible audit trail for review decisions.
 - They need governance tools that survive reorganizations, role changes, task transfers, and policy updates.
 - They need reviewers to understand what they can do without guessing their authority.
+- They need source connection failures to be explicit enough for IT, privacy, and demo operators to distinguish unsafe configuration, missing data, permission denial, and transient infrastructure failures.
 
 ## Value Proposition
 

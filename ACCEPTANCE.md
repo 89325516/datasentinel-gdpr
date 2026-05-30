@@ -36,6 +36,7 @@ Frontend-backend parallel development may start when:
 
 The first implementation milestone is accepted when:
 
+- A controlled sample source connection can be tested before scan start.
 - A full scan can be started on a controlled sample source.
 - Admin metrics show scanned files, flagged files, scanned volume, progress, scan time, review backlog, high-risk count, and retention-overdue count.
 - A responsible user can list assigned findings.
@@ -45,6 +46,20 @@ The first implementation milestone is accepted when:
 - A delta scan can represent changed-file-only processing.
 - Evaluation metrics show precision, recall, F1, reproducibility, throughput, and resource intensity.
 - Deletion remains simulated.
+
+## Backend Source Connection Acceptance
+
+The backend source connection vertical slice is accepted when:
+
+- The default organizer sample source returns a connected, metadata-only connection result with source version, capabilities, and no raw content.
+- Unsafe organizer sample references return `unsafe_reference` without remote access or secret echoing.
+- Missing sample-family metadata returns a degraded partial result with warnings.
+- Mock sources explicitly state their mock-only boundary and do not imply production tenant access.
+- Local sample sources are accepted only inside configured allowed roots and symlink escapes are denied.
+- Unknown source IDs return RFC 9457-compatible problem details.
+- Unsupported source types return a neutral unreachable result instead of crashing.
+- The framework-neutral source API adapter returns contract headers and `application/problem+json` content types for source errors.
+- Behavior tests cover success, degraded metadata, invalid config, unsafe reference, local boundary denial, missing source, and unsupported source cases.
 
 ## Adaptive Governance Acceptance
 

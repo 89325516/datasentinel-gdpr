@@ -50,7 +50,35 @@ ConnectionTestEnvelope:
         sourceId: { type: string }
         reachable: { type: boolean }
         message: { type: string }
+        connectionStatus:
+          type: string
+          description: Open status string such as connected, degraded, invalid_config, unsafe_reference, policy_denied, not_found, unsupported_type, or network_error.
+        checkedAt: { type: string, format: date-time }
+        capabilities: { $ref: "#/ConnectionCapabilities" }
+        diagnostics:
+          type: array
+          items: { $ref: "#/ConnectionDiagnostic" }
+        sourceVersion: { type: [string, "null"] }
+        contentFingerprint: { type: [string, "null"] }
     meta: { $ref: "./common.yaml#/Meta" }
+ConnectionCapabilities:
+  type: object
+  required: [canReadMetadata, canReadContent, supportsDeltaScan, requiresCredentials]
+  additionalProperties: true
+  properties:
+    canReadMetadata: { type: boolean }
+    canReadContent: { type: boolean }
+    supportsDeltaScan: { type: boolean }
+    requiresCredentials: { type: boolean }
+ConnectionDiagnostic:
+  type: object
+  required: [code, severity, message, retryable]
+  additionalProperties: true
+  properties:
+    code: { type: string }
+    severity: { type: string, example: "warning" }
+    message: { type: string }
+    retryable: { type: boolean }
 StartFullScanRequest:
   type: object
   required: [sourceId]

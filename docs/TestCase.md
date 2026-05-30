@@ -23,6 +23,22 @@
 | CONTRACT-007 | Review governance contract | Governance config, active policy pack, permissions, and review support endpoints are documented and mocked. |
 | CONTRACT-008 | Review organizer sample source | The organizer sample repository is represented as a default demo source without vendoring PDFs. |
 
+## Backend Source Connection Checks
+
+| ID | Scenario | Expected Result |
+| --- | --- | --- |
+| SRC-CONN-001 | Test default organizer sample connection | Response keeps the contract envelope, returns `reachable = true`, `connectionStatus = connected`, metadata capabilities, source version, and no raw file content. |
+| SRC-CONN-002 | Test organizer source with unsafe URL | Response returns `reachable = false`, `connectionStatus = unsafe_reference`, and does not echo URL credentials. |
+| SRC-CONN-003 | Test organizer source with missing expected sample families | Response returns `reachable = true`, `connectionStatus = degraded`, `meta.partial = true`, and warnings. |
+| SRC-CONN-004 | Test unknown source ID | Backend returns RFC 9457-compatible problem details with 404 semantics. |
+| SRC-CONN-005 | Test unsupported source type | Response returns `reachable = false`, `connectionStatus = unsupported_type`, and a neutral warning diagnostic. |
+| SRC-CONN-006 | Test mock SharePoint source | Response states the source is mock-only and does not claim production tenant or content access. |
+| SRC-CONN-007 | Test local source inside allowed root | Response returns `reachable = true` and content capability only for the allowed local directory. |
+| SRC-CONN-008 | Test local source outside allowed root or symlink escape | Response returns `reachable = false` and `connectionStatus = policy_denied`. |
+| SRC-CONN-009 | Test missing local source path | Response returns `connectionStatus = not_found` with retryable diagnostics. |
+| SRC-CONN-010 | Test source creation validation | Blank required fields and duplicate IDs are rejected; unknown config fields are preserved safely. |
+| SRC-CONN-011 | Test framework-neutral source API adapter | Success responses include `X-Trace-Id` and `X-Contract-Version`; source errors return `application/problem+json`. |
+
 ## Future Behavior Test Themes
 
 These are not implementation tests yet. They define the areas that future tests should cover:

@@ -17,6 +17,7 @@ Provide a prototype workflow that shows how an organization can discover GDPR-re
 ## Required Capabilities
 
 - Full-scan concept for initial discovery.
+- Source-connection validation for controlled sample and mock sources before scans start.
 - Classification concept for personal-data findings and risk context.
 - Owner-routing concept for review accountability.
 - Human-review concept with decision reasons.
@@ -55,6 +56,7 @@ These surfaces must consume the tolerant contract defined in `docs/API_CONTRACT.
 - User-facing and repository text must be English.
 - Deletion must be human-accountable.
 - Sensitive snippets should be minimized or masked in any future UI.
+- Source connection results must expose reachability, degraded states, capability limits, and diagnostics without exposing secrets or raw source content.
 - Frontend and backend work must use the shared API contract and mock fixtures.
 - Legal rules must be represented as configurable guidance, not fixed code conclusions.
 - User interfaces must show permission boundaries and avoid surprising denial after submit.

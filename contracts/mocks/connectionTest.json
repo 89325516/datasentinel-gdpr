@@ -1,0 +1,25 @@
+{
+  "data": {
+    "sourceId": "source_001",
+    "reachable": true,
+    "message": "Organizer sample source metadata is reachable.",
+    "connectionStatus": "connected",
+    "checkedAt": "2026-05-30T12:00:00Z",
+    "capabilities": {
+      "canReadMetadata": true,
+      "canReadContent": false,
+      "supportsDeltaScan": true,
+      "requiresCredentials": false
+    },
+    "diagnostics": [],
+    "sourceVersion": "76b0f66d5594d7fccfdd103c8379f7d9d7356aeb",
+    "contentFingerprint": "metadata:sha256:aa91de1b3d48e9b52a04429e85bb0e5f44506975185dd430fff493afc0ced4c8"
+  },
+  "meta": {
+    "contractVersion": "0.1.0",
+    "generatedAt": "2026-05-30T12:00:00Z",
+    "traceId": "trace_demo_connection_test",
+    "partial": false,
+    "warnings": []
+  }
+}
