@@ -426,6 +426,64 @@
   position: relative;
 }
 
+.landing-action-flow {
+  bottom: -10px;
+  height: 150px;
+  left: 8vw;
+  pointer-events: none;
+  position: absolute;
+  right: 8vw;
+  transform-origin: left center;
+  z-index: 1;
+}
+
+.landing-action-flow svg {
+  display: block;
+  height: 100%;
+  overflow: visible;
+  width: 100%;
+}
+
+.landing-flow-path,
+.landing-flow-trace {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.landing-flow-path {
+  animation: landing-flow-reveal 2.15s ease-in-out .2s both;
+  opacity: 0;
+  stroke: url("#landing-flow-gradient");
+  stroke-dasharray: 1180;
+  stroke-dashoffset: 1180;
+  stroke-width: 2.5;
+  transform-origin: left center;
+}
+
+.landing-flow-trace {
+  animation: landing-flow-cross 2.4s cubic-bezier(.65, 0, .35, 1) .24s both;
+  filter: drop-shadow(0 0 6px rgba(11, 87, 208, .18));
+  opacity: 0;
+  stroke: rgba(11, 87, 208, .38);
+  stroke-dasharray: 84 1096;
+  stroke-dashoffset: 1180;
+  stroke-width: 3;
+}
+
+.landing-hero-actions::after {
+  animation: landing-flow-button-glow 2.35s ease-in-out .36s both;
+  background: linear-gradient(90deg, transparent, rgba(11, 87, 208, .08), rgba(20, 122, 66, .06), transparent);
+  border-radius: 999px;
+  content: "";
+  inset: -10px -20px;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+}
+
 .landing-hero-primary {
   isolation: isolate;
   overflow: visible;
@@ -606,6 +664,68 @@
   }
 }
 
+@keyframes landing-flow-reveal {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 1180;
+    transform: scaleX(.04);
+  }
+
+  34% {
+    opacity: .72;
+    transform: scaleX(.52);
+  }
+
+  74% {
+    opacity: .62;
+    stroke-dashoffset: 0;
+    transform: scaleX(1);
+  }
+
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -150;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes landing-flow-cross {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 1180;
+  }
+
+  22% {
+    opacity: .72;
+  }
+
+  66% {
+    opacity: .7;
+  }
+
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -220;
+  }
+}
+
+@keyframes landing-flow-button-glow {
+  0%, 18% {
+    opacity: 0;
+    transform: translateX(-42px) scaleX(.76);
+  }
+
+  45% {
+    opacity: 1;
+    transform: translateX(0) scaleX(1);
+  }
+
+  78%, 100% {
+    opacity: 0;
+    transform: translateX(42px) scaleX(.82);
+  }
+}
+
 @keyframes landing-button-orbit {
   to {
     --landing-button-orbit: 360deg;
@@ -649,6 +769,9 @@
     animation: none;
   }
 
+  .landing-flow-path,
+  .landing-flow-trace,
+  .landing-hero-actions::after,
   .landing-hero-primary,
   .landing-hero-primary::before,
   .landing-hero-primary::after {

@@ -505,6 +505,22 @@ export function HomePage() {
             </div>
           </div>
 
+          <div className="landing-action-flow" aria-hidden="true">
+            <svg viewBox="0 0 1180 210" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="landing-flow-gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+                  <stop offset="0%" stopColor="#0b57d0" stopOpacity="0" />
+                  <stop offset="26%" stopColor="#0b57d0" stopOpacity=".28" />
+                  <stop offset="52%" stopColor="#147a42" stopOpacity=".2" />
+                  <stop offset="78%" stopColor="#62666c" stopOpacity=".18" />
+                  <stop offset="100%" stopColor="#0b57d0" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path className="landing-flow-path" d="M18 118 C170 92 304 112 438 108 C520 106 548 88 604 88 C674 88 706 112 780 112 C914 112 1018 88 1162 104" />
+              <path className="landing-flow-trace" d="M18 118 C170 92 304 112 438 108 C520 106 548 88 604 88 C674 88 706 112 780 112 C914 112 1018 88 1162 104" />
+            </svg>
+          </div>
+
         </section>
 
         <PublicAnalysisTrial />
